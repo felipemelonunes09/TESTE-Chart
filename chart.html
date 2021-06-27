@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+
+    <div id="container" style="height: 400px; min-width: 310px"></div>
+
+    <script>
+        // Create the chart
+        Highcharts.stockChart('container', {
+            chart: {
+                events: {
+                    load: function () {
+
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                       
+
+                            var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjIyMmZlYjMzNmIwOWVjNDc2YzgyNjE3OGYxNmJkNmRmOTg2NDgxYmZmNGUxODMwMDBhMTBlNmViMjI4ODkzMzI2MjIwNTAyMDljNzg5YzBlIn0.eyJhdWQiOiI4IiwianRpIjoiMjIyZmViMzM2YjA5ZWM0NzZjODI2MTc4ZjE2YmQ2ZGY5ODY0ODFiZmY0ZTE4MzAwMGExMGU2ZWIyMjg4OTMzMjYyMjA1MDIwOWM3ODljMGUiLCJpYXQiOjE1ODE2MzgzNDEsIm5iZiI6MTU4MTYzODM0MSwiZXhwIjoxNjEzMjYwNzQxLCJzdWIiOiI1MTAiLCJzY29wZXMiOltdfQ.ZDckGKkWEFyQnlbZwFu5x5r4HFrGC2UEE78moYMJMU4bRwdcUGPcjGvO2smn_8M4rR6R6NpzXb-kIXB9M2Pffq7vTIfwMnlCgYclundYl_pj3ARhkkT51drRD56CBjwWsRMWf3VamhfQD-FjP7pk1AtQ2UB3cQ24pCmZMC67MjJpmjnQmkoR5gwf5N19aXIoP8phXy3vsGzQImBno_drSvc8I0i5czWLAtsbeUWUc2YV65sJCuWgHz0hU4ZSfFQ9aAHPpkn0QgdGFMkbfTX7P10wTZjBCWp5Qh0FeVGdoWM9rsCsjTY6od0XMQ_WDlGVpOe8JE-IWToOCWRYKKosWDTldTShnUMbuln0VUvmow3KhgObUyzU9fHJTUCDSnQUrod8Z7iYsaZYdMbmsF2VxFVHSdRaI8fJWtH9GEEdFMcpGOY5gGyhV5RYhwXTvpUeI5qiQHxJieXU5ssadpgGgIyQ12Zd0ASdBcpAnLgfqpcOR5T0l-qNPTFbo7SwjyRg8OcIdyvPT3dd7spjXp59T6MTe-6WBhjkp1vIeIQFlBDg6I6S26ZNXnle1VxKn8Yul7H-1Mf_dx8xH8VHLgbI_InQOErEiJgUYFC-g4FG-OqrymHUWo6TVSlb0Nn2wl9_obfQHoq_aHzSUcrPjywZafoWGQy4_XtObRtdKsiIDHY";
+                            var ws = new WebSocket(`wss://connect.websocket.in/v2/1?token=${token}`);
+                            ws.onmessage = function (e) {
+                                var x = (new Date()).getTime(), 
+                                    y = parseFloat(e.data);
+                                series.addPoint([x, y], true, true);
+                            }
+
+                            ws.onopen = function () {}
+
+                            
+                       
+                    }
+                }
+            },
+
+            time: {
+                useUTC: false
+            },
+
+            rangeSelector: {
+                buttons: [{
+                    count: 1,
+                    type: 'minute',
+                    text: '1M'
+                }, {
+                    count: 5,
+                    type: 'minute',
+                    text: '5M'
+                }, {
+                    type: 'all',
+                    text: 'All'
+                }],
+                inputEnabled: false,
+                selected: 0
+            },
+
+            title: {
+                text: 'Live random data'
+            },
+
+            exporting: {
+                enabled: false
+            },
+
+            series: [{
+                name: 'Random data',
+                data: (function () {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+
+                    for (i = -999; i <= 0; i += 1) {
+                        data.push([
+                            time + i * 1000,
+                            Math.round(Math.random() * 100)
+                        ]);
+                    }
+                    return data;
+                }())
+            }]
+        });
+
+    </script>
+</body>
+</html>
